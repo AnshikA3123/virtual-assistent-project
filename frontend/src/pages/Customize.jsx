@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from 'react';
 import { LuImagePlus } from "react-icons/lu";
-import Card from '../components/card';
+import Card from '../components/Card';
 import image1 from "../assets/image1.png";
 import image2 from "../assets/image2.jpg";
 import image3 from "../assets/image3.png";
@@ -8,7 +8,7 @@ import image4 from "../assets/image4.png";
 import image5 from "../assets/image5.png";
 import image6 from "../assets/image6.png";
 import image7 from "../assets/image7.jpeg";
-import { UserDataContext } from '../context/userContext';
+import { UserDataContext } from '../context/UserContext';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 function Customize() {
