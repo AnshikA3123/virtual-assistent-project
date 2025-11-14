@@ -30,11 +30,14 @@ export const signUp = async (req, res) => {
 
     const token = await genToken(user._id);
 
+    // Cookie settings for cross-origin (GitHub Pages to Render)
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      sameSite: "strict",
-      secure: false,
+      sameSite: isProduction ? "none" : "lax", // "none" required for cross-origin in production
+      secure: isProduction, // true in production (HTTPS), false in development (HTTP)
+      path: "/",
     });
 
     return res.status(201).json({
@@ -63,10 +66,16 @@ export const signIn = async (req, res) => {
       expiresIn: "1d",
     });
 
-    res
-      .cookie("token", token, { httpOnly: true })
-      .status(200)
-      .json({ message: "Login successful", user });
+    // Cookie settings for cross-origin (GitHub Pages to Render)
+    const isProduction = process.env.NODE_ENV === 'production';
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: isProduction ? "none" : "lax", // "none" required for cross-origin in production
+      secure: isProduction, // true in production (HTTPS), false in development (HTTP)
+      path: "/",
+    });
+    res.status(200).json({ message: "Login successful", user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Signin error", error: error.message });

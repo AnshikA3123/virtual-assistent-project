@@ -19,7 +19,13 @@ function UserContext({children}) {
         setUserData(result.data);
         console.log(result.data);
       } catch (error) {
-        console.log(error);
+        // 401 is expected when user is not logged in - don't log as error
+        if (error.response?.status === 401) {
+          // User not authenticated - this is normal on signup/login pages
+          setUserData(null);
+        } else {
+          console.log("Error fetching user:", error);
+        }
       }
     }
 
