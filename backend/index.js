@@ -5,7 +5,7 @@ import connectDb from "./config/db.js"
 import authRouter from "./routes/auth.routes.js"
 import cookieParser from "cookie-parser"
 import cors from "cors"
-import UserRouter from "./routes/user.routes.js"
+import UserRouter from "./routes/User.routes.js"
 import geminiResponse from "./gemini.js"
 
 
