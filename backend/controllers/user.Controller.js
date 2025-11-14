@@ -21,21 +21,42 @@ export const getCurrentUser=async (req,res)=>{
 export const updateAssistant=async (req,res)=>{
     
     try {
+        // Check if userId exists (from isAuth middleware)
+        if (!req.userId) {
+            return res.status(401).json({message:"User not authenticated"});
+        }
+
         const {assistantName, imageUrl}=req.body;
         let assistantImage;
+        
         if(req.file){
             assistantImage=await uploadOnCloudinary(req.file.path);
         }
-        else{
+        else if(imageUrl){
             assistantImage=imageUrl;
         }
-        const user=await User.findByIdAndUpdate(req.userId,{assistantName,assistantImage},
-            {new:true}).select("-password");
+        
+        // Ensure at least assistantName is provided
+        if (!assistantName) {
+            return res.status(400).json({message:"Assistant name is required"});
+        }
 
-            return res.status(200).json(user);
+        const updateData = {assistantName};
+        if (assistantImage) {
+            updateData.assistantImage = assistantImage;
+        }
+
+        const user=await User.findByIdAndUpdate(req.userId, updateData, {new:true}).select("-password");
+        
+        if(!user){
+            return res.status(404).json({message:"User not found"});
+        }
+
+        return res.status(200).json(user);
     
     } catch (error) {
-         return res.status(400).json({message:"Update Assistnat error "});
+        console.log("Update Assistant Error:", error);
+        return res.status(400).json({message:"Update Assistant error", error: error.message});
     }
 };
 
