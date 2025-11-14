@@ -4,7 +4,10 @@ import axios from "axios";
 
 export const UserDataContext = createContext()
 function UserContext({children}) {
-    const serverUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+    // Backend URL with fallbacks: env variable -> production -> localhost
+    const serverUrl = import.meta.env.VITE_API_URL || 
+                      "https://virtual-assistent-project.onrender.com" || 
+                      "http://localhost:8000";
     
     const[userData,setUserData]=useState(null);
      const[frontendImage,setFrontendImage]=useState(null);
