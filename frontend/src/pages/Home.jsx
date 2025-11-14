@@ -16,17 +16,17 @@ function Home() {
   const isRecognizingRef=useRef(false);
   const synth=window.speechSynthesis;
 
-const handleLogOut=async ()=>{
+const handleLogOut = async () => {
   try {
-    const result =await axios.get(`${serverUrl}/api/auth/logout`,{withCredentials:true})
+    await axios.get(`${serverUrl}/api/auth/logout`, { withCredentials: true });
     setUserData(null);
-    navigate("/signIn");
+    navigate("/signup");   // <-- ONLY CHANGE: correct lowercase path
   } catch (error) {
     setUserData(null);
     console.log(error);
-  
+    navigate("/signup");   // <-- also navigate on error
   }
-}
+};
 const startRecognition =()=>{
   try {
     recoginitionRef.current?.start();
