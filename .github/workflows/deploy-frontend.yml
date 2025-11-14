@@ -43,7 +43,7 @@ jobs:
           VITE_BASE_PATH: /virtual-assistent-project/
         run: npm run build
 
-      - name: Create 404.html for GitHub Pages SPA routing
+      - name: Create 404.html and .nojekyll for GitHub Pages SPA routing
         working-directory: ./frontend/dist
         run: |
           # Copy index.html to 404.html so GitHub Pages serves the app for all routes
@@ -51,12 +51,17 @@ jobs:
           if [ -f "index.html" ]; then
             cp index.html 404.html
             echo "✅ Created 404.html for SPA routing"
-            echo "Files in dist:"
-            ls -la
           else
             echo "❌ Error: index.html not found in dist folder"
             exit 1
           fi
+          
+          # Create .nojekyll to prevent Jekyll from processing files
+          touch .nojekyll
+          echo "✅ Created .nojekyll file"
+          
+          echo "Files in dist:"
+          ls -la | head -20
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

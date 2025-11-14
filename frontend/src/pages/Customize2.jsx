@@ -13,23 +13,36 @@ function Customize2() {
     const handleUpdateAssistant=async ()=>{
         setLoding(true);
         try {
+            if (!assistantName || assistantName.trim() === "") {
+                alert("Please enter an assistant name");
+                setLoding(false);
+                return;
+            }
 
             let formData= new FormData()
-            formData.append("assistantName",assistantName);
+            formData.append("assistantName",assistantName.trim());
             if(backendImage){
                 formData.append("assistantImage",backendImage);
-            }else{
+            }else if(selectedImage){
                 formData.append("imageUrl",selectedImage);
             }
-            const result=await axios.post(`${serverUrl}/api/user/update`,formData,{withCredentials:true});
+            
+            const result=await axios.post(`${serverUrl}/api/user/update`,formData,{
+                withCredentials:true,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
             setLoding(false);
-            console.log(result.data);
+            console.log("Update successful:", result.data);
             setUserData(result.data);
             navigate("/");
         } 
         catch (error) {
             setLoding(false);
-            console.log(error);
+            console.error("Update error:", error);
+            const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message || "Failed to update assistant";
+            alert(errorMessage);
         }
     }
 
