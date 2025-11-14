@@ -2,19 +2,19 @@ import jwt from "jsonwebtoken";
 
 const isAuth = async (req, res, next) => {
   try {
-    const token = req.cookies.token; // ✅ FIXED (cookies not cookie)
+    const token = req.cookies.token;
 
     if (!token) {
-      return res.status(400).json({ message: "Token not found" });
+      return res.status(401).json({ message: "Token not found" });
     }
 
     const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = verifyToken.userId;
+    req.userId = verifyToken.userId || verifyToken.id; // Support both userId and id
 
     next();
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "isAuth error" });
+    console.log("Auth error:", error.message);
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 
