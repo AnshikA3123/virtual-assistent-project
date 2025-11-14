@@ -2,8 +2,13 @@ import axios from "axios";
 
 const geminiResponse = async (command,assistantName,userName) => {
   try {
-    const apiUrl = process.env.GEMINI_API_URL;
     const apiKey = process.env.GEMINI_API_KEY;
+    
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not defined");
+    }
+    
+    const apiUrl = process.env.GEMINI_API_URL || `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
 
     const prompt = `
 You are a virtual assistant named ${assistantName} created by ${userName}.
